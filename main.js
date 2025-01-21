@@ -147,11 +147,29 @@ function reload_races_annotations(layout) {
   Plotly.relayout(getDiv(), layout);
 }
 
+function populate_url_by_fields() {
+  const urlParams = new URLSearchParams(window.location.search);
+  urlParams.set("p1", document.getElementById("fargo_slider1").value);
+  urlParams.set("p2", document.getElementById("fargo_slider2").value);
+  urlParams.set("race", document.getElementById("race_slider").value);
+  window.history.replaceState({}, "", "?" + urlParams.toString());
+}
+
 function on_rating_change() {
+  // get the race
+  const race_base = document.getElementById("race_slider").value;
+  document.getElementById("race_value").textContent = race_base;
+
+  // get the ratings
   const player1_fargo = document.getElementById("fargo_slider1").value;
   const player2_fargo = document.getElementById("fargo_slider2").value;
   document.getElementById("fargo_value1").textContent = player1_fargo;
   document.getElementById("fargo_value2").textContent = player2_fargo;
+
+  // fix the url
+  populate_url_by_fields();
+
+  // some derived values
   document.getElementById("delta_value").textContent =
     player1_fargo - player2_fargo;
 
@@ -160,9 +178,7 @@ function on_rating_change() {
   document.getElementById("prob_value").textContent =
     player1_percentage.toFixed(1);
 
-  const race_base = document.getElementById("race_slider").value;
-  document.getElementById("race_value").textContent = race_base;
-
+  // update the heatmap
   const [data, layout] = gen_heatmap(player1_fargo, player2_fargo, race_base);
   reload_heatmap_data(data);
   reload_races_annotations(layout);
@@ -220,6 +236,14 @@ function gen_heatmap(player1_fargo, player2_fargo, race_base) {
   return [data, layout];
 }
 
+function init_fields_by_url() {
+  const urlParams = new URLSearchParams(window.location.search);
+  document.getElementById("fargo_slider1").value = urlParams.get("p1") ?? 500;
+  document.getElementById("fargo_slider2").value = urlParams.get("p2") ?? 500;
+  document.getElementById("race_slider").value = urlParams.get("race") ?? 7;
+  on_rating_change();
+}
+
 function init_heatmap() {
   return [
     {
@@ -243,4 +267,4 @@ const layout = {};
 Plotly.newPlot(getDiv(), init_heatmap(), layout, config);
 window.addEventListener("resize", resizePlot);
 resizePlot(); // Initial resize
-on_rating_change(); // Initial rendering
+init_fields_by_url(); // Initial rendering
