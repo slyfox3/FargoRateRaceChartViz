@@ -1,5 +1,5 @@
 # Visualization for FargoRate's Race Chart
-## https://slyfox3.github.io/FargoRateRaceChartViz/
+## Visit: https://slyfox3.github.io/FargoRateRaceChartViz/
 
 This is an unofficial calculation and visualization to show winning percentages of different races, based on FargoRate.
 
