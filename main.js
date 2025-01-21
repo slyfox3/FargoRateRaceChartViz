@@ -155,6 +155,11 @@ function on_rating_change() {
   document.getElementById("delta_value").textContent =
     player1_fargo - player2_fargo;
 
+  const player1_percentage =
+    single_game_player1_winning_prob(player1_fargo, player2_fargo) * 100;
+  document.getElementById("prob_value").textContent =
+    player1_percentage.toFixed(1);
+
   const race_base = document.getElementById("race_slider").value;
   document.getElementById("race_value").textContent = race_base;
 
@@ -173,10 +178,14 @@ document.getElementById("race_slider").oninput = function () {
   on_rating_change();
 };
 
-function gen_heatmap(player1_fargo, player2_fargo, race_base) {
+function single_game_player1_winning_prob(player1_fargo, player2_fargo) {
   const fargo_delta = player1_fargo - player2_fargo;
   const player1_share = Math.pow(2.0, fargo_delta / 100.0);
-  const p = player1_share / (player1_share + 1);
+  return player1_share / (player1_share + 1);
+}
+
+function gen_heatmap(player1_fargo, player2_fargo, race_base) {
+  const p = single_game_player1_winning_prob(player1_fargo, player2_fargo);
   const handicapped_sign = p > 0.5 ? 1 : -1;
   const cols = Math.ceil(race_base * 1.5) + 1;
   const rows = cols;
@@ -211,11 +220,27 @@ function gen_heatmap(player1_fargo, player2_fargo, race_base) {
   return [data, layout];
 }
 
+function init_heatmap() {
+  return [
+    {
+      z: [[0]],
+      customdata: [[0]],
+      hovertemplate:
+        "Player1 races to  %{x:>2} \t (%{z:>.2%})<br>" +
+        "Player2 races to  %{y:>2} \t (%{customdata:>.2%})<extra></extra>",
+      colorscale: "Picnic",
+      type: "heatmap",
+      showscale: false,
+    },
+  ];
+}
+
 const config = {
   responsive: true,
 };
 
-const [data, layout] = gen_heatmap(500, 550, 7);
-Plotly.newPlot(getDiv(), data, layout, config);
+const layout = {};
+Plotly.newPlot(getDiv(), init_heatmap(), layout, config);
 window.addEventListener("resize", resizePlot);
 resizePlot(); // Initial resize
+on_rating_change(); // Initial rendering
