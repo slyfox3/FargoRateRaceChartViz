@@ -194,6 +194,15 @@ document.getElementById("race_slider").oninput = function () {
   on_rating_change();
 };
 
+document.getElementById("share_button").onclick = function () {
+  navigator.clipboard.writeText(window.location.href).then(() => {
+    this.textContent = "Copied!  :-) \t\t";
+    setTimeout(() => {
+      this.textContent = "Copy Url";
+    }, 1500);
+  });
+};
+
 function single_game_player1_winning_prob(player1_fargo, player2_fargo) {
   const fargo_delta = player1_fargo - player2_fargo;
   const player1_share = Math.pow(2.0, fargo_delta / 100.0);
