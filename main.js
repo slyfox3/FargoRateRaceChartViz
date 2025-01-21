@@ -121,7 +121,7 @@ function resizePlot() {
   div.style.height = `${screenHeight}px`;
   const w = div.offsetWidth;
   const h = div.offsetHeight;
-  const l = Math.min(w * 0.9, h * 0.9);
+  const l = Math.min(w * 0.9, h * 0.85);
   const layoutUpdate = {
     width: l,
     height: l,
