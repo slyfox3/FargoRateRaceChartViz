@@ -149,22 +149,17 @@ function reload_races_annotations(layout) {
 
 function populate_url_by_fields() {
   const urlParams = new URLSearchParams(window.location.search);
-  urlParams.set("p1", document.getElementById("fargo_slider1").value);
-  urlParams.set("p2", document.getElementById("fargo_slider2").value);
-  urlParams.set("race", document.getElementById("race_slider").value);
+  urlParams.set("p1", document.getElementById("fargo_value1").value);
+  urlParams.set("p2", document.getElementById("fargo_value2").value);
+  urlParams.set("race", document.getElementById("race_value").value);
   window.history.replaceState({}, "", "?" + urlParams.toString());
 }
 
 function on_rating_change() {
-  // get the race
-  const race_base = document.getElementById("race_slider").value;
-  document.getElementById("race_value").textContent = race_base;
-
-  // get the ratings
-  const player1_fargo = document.getElementById("fargo_slider1").value;
-  const player2_fargo = document.getElementById("fargo_slider2").value;
-  document.getElementById("fargo_value1").textContent = player1_fargo;
-  document.getElementById("fargo_value2").textContent = player2_fargo;
+  // get all inputs for the chart
+  const race_base = document.getElementById("race_value").value;
+  const player1_fargo = document.getElementById("fargo_value1").value;
+  const player2_fargo = document.getElementById("fargo_value2").value;
 
   // fix the url
   populate_url_by_fields();
@@ -184,14 +179,48 @@ function on_rating_change() {
   reload_races_annotations(layout);
 }
 
-document.getElementById("fargo_slider1").oninput = function () {
+function on_spinner_change() {
+  document.getElementById("fargo_slider1").value =
+    document.getElementById("fargo_value1").value;
+  document.getElementById("fargo_slider2").value =
+    document.getElementById("fargo_value2").value;
+  document.getElementById("race_slider").value =
+    document.getElementById("race_value").value;
   on_rating_change();
+}
+
+function on_slider_change(which) {
+  if (which == 1) {
+    document.getElementById("fargo_value1").value =
+      document.getElementById("fargo_slider1").value;
+  } else if (which == 2) {
+    document.getElementById("fargo_value2").value =
+      document.getElementById("fargo_slider2").value;
+  } else if (which == 3) {
+    document.getElementById("race_value").value =
+      document.getElementById("race_slider").value;
+  }
+  on_rating_change();
+}
+
+document.getElementById("fargo_value1").oninput = function () {
+  on_spinner_change();
+};
+document.getElementById("fargo_value2").oninput = function () {
+  on_spinner_change();
+};
+document.getElementById("race_value").oninput = function () {
+  on_spinner_change();
+};
+
+document.getElementById("fargo_slider1").oninput = function () {
+  on_slider_change(1);
 };
 document.getElementById("fargo_slider2").oninput = function () {
-  on_rating_change();
+  on_slider_change(2);
 };
 document.getElementById("race_slider").oninput = function () {
-  on_rating_change();
+  on_slider_change(3);
 };
 
 document.getElementById("share_button").onclick = function () {
@@ -247,9 +276,10 @@ function gen_heatmap(player1_fargo, player2_fargo, race_base) {
 
 function init_fields_by_url() {
   const urlParams = new URLSearchParams(window.location.search);
-  document.getElementById("fargo_slider1").value = urlParams.get("p1") ?? 500;
-  document.getElementById("fargo_slider2").value = urlParams.get("p2") ?? 500;
-  document.getElementById("race_slider").value = urlParams.get("race") ?? 7;
+  document.getElementById("fargo_value1").value = urlParams.get("p1") ?? 500;
+  document.getElementById("fargo_value2").value = urlParams.get("p2") ?? 500;
+  document.getElementById("race_value").value = urlParams.get("race") ?? 7;
+  on_spinner_change();
   on_rating_change();
 }
 

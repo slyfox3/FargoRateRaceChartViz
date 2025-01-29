@@ -4,9 +4,13 @@
 
 <body>
     <p>
-    <span style="color: red; font-weight: bold;">Player1 Fargo</span>: <span style="font-weight: bold;" id="fargo_value1"></span> <input type="range" id="fargo_slider1" min="0" max="1000" value="500">
+    <span style="color: red; font-weight: bold;">Player1 Fargo</span>:
+    <input type="number" id="fargo_value1" min="300" max="900" step="1">
+    <input type="range" id="fargo_slider1" min="300" max="900">
     &emsp;
-    <span style="color: blue; font-weight: bold;">Player2 Fargo</span>: <span style="font-weight: bold;" id="fargo_value2"></span> <input type="range" id="fargo_slider2" min="0" max="1000" value="500">
+    <span style="color: blue; font-weight: bold;">Player2 Fargo</span>:
+    <input type="number" id="fargo_value2" min="300" max="900" step="1">
+    <input type="range" id="fargo_slider2" min="300" max="900">
     &emsp;
     <button id="share_button">Copy Url</button>
     &emsp; &emsp;
@@ -17,7 +21,9 @@
     <br>
     The rating delta is <span style="font-weight: bold;" id="delta_value"></span>, which means Player1 has <span style="font-weight: bold;" id="prob_value"></span>% chance to win a single rack.
     <br>
-    The intersection of the "lighter grids" and the "R" markers locates the fair R<span id="race_value"></span> Races. <input type="range" id="race_slider" min="3" max="120" value="9">
+    The intersection of the "lighter grids" and the "R" markers locates the fair R
+    <input type="number" id="race_value" min="3" max="120" step="1"> Races.
+    <input type="range" id="race_slider" min="3" max="30">
     </p>
 
     <div id="myDiv"></div>
